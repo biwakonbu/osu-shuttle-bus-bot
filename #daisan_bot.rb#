@@ -83,4 +83,4 @@ tweets = "現在直近のシャトルバス運行時間 \r\n"
 tweets << collect_table(suminodo_table)
 tweets << collect_table(daisan_table)
 
-puts tweets
+tweets

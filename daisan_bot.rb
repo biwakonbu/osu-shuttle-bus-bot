@@ -104,7 +104,7 @@ daisan_table = concat_to bus_timetable(doc, from_daisan)
 client = Twitter::Client.new
 
 while true
-  if Time.now.min % 10 == 0
+  if Time.now.min % 10 == 0 and (7 <= Time.now.hour and Time.now.hour <= 23)
     begin
       tweets = "現在直近のシャトルバス運行時間 \r\n"
       tweets << collect_table(suminodo_table)

@@ -1,3 +1,6 @@
 *.*~
 #*.*#
 #.*.*
+key.yml
+vendor/*
+.bundle

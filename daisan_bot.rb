@@ -1,8 +1,30 @@
 # -*- coding: utf-8 -*-
 require 'nokogiri'
 require 'open-uri'
+require 'twitter'
 require 'time'
-require 'pp'
+
+
+Process.daemon
+pid = File.open("/var/run/daisan.rb.pid", "w")
+pid.write Process.pid
+pid.close
+
+config_file = 'key.yml'
+
+env = YAML::load File.open(config_file) if File.exist? config_file
+
+CONSUMER_KEY = env['consumer_key']
+CONSUMER_SECRET = env['consumer_secret']
+OAUTH_TOKEN = env['oauth_token']
+OAUTH_TOKEN_SECRET = env['oauth_token_secret']
+
+Twitter.configure do |config|
+  config.consumer_key = CONSUMER_KEY
+  config.consumer_secret = CONSUMER_SECRET
+  config.oauth_token = OAUTH_TOKEN
+  config.oauth_token_secret = OAUTH_TOKEN_SECRET
+end
 
 bus_schedule = 'http://www.osaka-sandai.ac.jp/cgi-bin/cms/campus_life.cgi?studentlife_cd=5JzeUsFN0i'
 doc = Nokogiri::HTML(open(bus_schedule))
@@ -79,8 +101,20 @@ from_daisan = split_table(2)
 suminodo_table = concat_to bus_timetable(doc, from_suminodo)
 daisan_table = concat_to bus_timetable(doc, from_daisan)
 
-tweets = "現在直近のシャトルバス運行時間 \r\n"
-tweets << collect_table(suminodo_table)
-tweets << collect_table(daisan_table)
+client = Twitter::Client.new
 
-puts tweets
+while true
+  if Time.now.min % 10 == 0
+    begin
+      tweets = "現在直近のシャトルバス運行時間 \r\n"
+      tweets << collect_table(suminodo_table)
+      tweets << collect_table(daisan_table)
+      client.update(tweets.join)
+    rescue => ex
+      sleep 10
+      retry
+    end
+  end
+
+  sleep 60
+end

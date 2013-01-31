@@ -69,7 +69,8 @@ def collect_table(timetable)
     time = []
     wday.each do |index|
       if /住道発|大学発/ =~ index
-        text = diagrum.shift + ", #{index}:\r\n"
+        index.sub!(/\(.+\)/, "【#{$1}】")
+        text = diagrum.shift + ", #{index}:\n"
         next
       end
       
@@ -102,7 +103,7 @@ client = Twitter::Client.new
 while true
   begin
     if Time.now.min % 10 == 0 and (7 <= Time.now.hour and Time.now.hour <= 23)
-      tweets = "現在直近のシャトルバス運行時間 \r\n"
+      tweets = "現在直近のシャトルバス運行時間 \n"
       tweets << collect_table(suminodo_table)
       tweets << collect_table(daisan_table)
       client.update(tweets)

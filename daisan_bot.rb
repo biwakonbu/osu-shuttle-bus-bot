@@ -69,7 +69,7 @@ def collect_table(timetable)
     time = []
     wday.each do |index|
       if /住道発|大学発/ =~ index
-        text = diagrum.shift + ", #{index}:\r\n"
+        text = "【#{index}】:\r\n"
         next
       end
       

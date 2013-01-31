@@ -55,7 +55,7 @@ def concat_to(table)
       array[-1].concat(x)
       next
     end
-    array << x if /[^(平日便|土曜日便|夏期ダイヤ)]/ =~ x[0]
+    array << ['']
   end
   array
 end
@@ -63,7 +63,6 @@ end
 def collect_table(timetable)
   text = ''
   tweets = []
-  diagrum = ['平日便', '土曜日便', '夏期ダイヤ']
   timetable.each do |wday|
     
     time = []
@@ -102,7 +101,7 @@ client = Twitter::Client.new
 while true
   begin
     if Time.now.min % 10 == 0 and (7 <= Time.now.hour and Time.now.hour <= 23)
-      tweets = "現在直近のシャトルバス運行時間 \r\n"
+      tweets = "現在直近のシャトルバス運行時間 \n"
       tweets << collect_table(suminodo_table)
       tweets << collect_table(daisan_table)
       client.update(tweets)

@@ -6,7 +6,7 @@ require 'yaml'
 require 'time'
 
 Process.daemon
-config_file = '~/.key.yml'
+config_file = "ENV['HOME']/.key.yml"
 
 env = YAML::load File.open(config_file)
 

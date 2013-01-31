@@ -2,12 +2,13 @@
 require 'nokogiri'
 require 'open-uri'
 require 'twitter'
+require 'yaml'
 require 'time'
 
 Process.daemon
-config_file = 'key.yml'
+config_file = '~/.key.yml'
 
-env = YAML::load File.open(config_file) if File.exist? config_file
+env = YAML::load File.open(config_file)
 
 CONSUMER_KEY = env['consumer_key']
 CONSUMER_SECRET = env['consumer_secret']
@@ -109,7 +110,6 @@ while true
 
     sleep 60
   rescue => ex
-    puts 'tweet miss.'
     sleep 10
     retry
   end

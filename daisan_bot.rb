@@ -55,6 +55,7 @@ def concat_to(table)
       array[-1].concat(x)
       next
     end
+    array << ['']
   end
   array
 end

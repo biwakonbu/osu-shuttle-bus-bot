@@ -4,12 +4,7 @@ require 'open-uri'
 require 'twitter'
 require 'time'
 
-
 Process.daemon
-pid = File.open("/var/run/daisan.rb.pid", "w")
-pid.write Process.pid
-pid.close
-
 config_file = 'key.yml'
 
 env = YAML::load File.open(config_file) if File.exist? config_file
@@ -104,17 +99,18 @@ daisan_table = concat_to bus_timetable(doc, from_daisan)
 client = Twitter::Client.new
 
 while true
-  if Time.now.min % 10 == 0 and (7 <= Time.now.hour and Time.now.hour <= 23)
-    begin
+  begin
+    if Time.now.min % 10 == 0 and (7 <= Time.now.hour and Time.now.hour <= 23)
       tweets = "現在直近のシャトルバス運行時間 \r\n"
       tweets << collect_table(suminodo_table)
       tweets << collect_table(daisan_table)
-      client.update(tweets.join)
-    rescue => ex
-      sleep 10
-      retry
+      client.update(tweets)
     end
-  end
 
-  sleep 60
+    sleep 60
+  rescue => ex
+    puts 'tweet miss.'
+    sleep 10
+    retry
+  end
 end

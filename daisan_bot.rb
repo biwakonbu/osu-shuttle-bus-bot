@@ -71,10 +71,6 @@ def collect_table(timetable)
       if /住道発|大学発/ =~ index
 <<<<<<< HEAD
         text = "【#{index}】:\r\n"
-=======
-        index.sub!(/\(.+\)/, "【#{$1}】")
-        text = diagrum.shift + ", #{index}:\n"
->>>>>>> tweet format change.
         next
       end
       

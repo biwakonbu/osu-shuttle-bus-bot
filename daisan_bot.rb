@@ -55,7 +55,7 @@ def concat_to(table)
       array[-1].concat(x)
       next
     end
-    array << x if /[^(平日便|土曜日便|夏期ダイヤ)]/ =~ x[0]
+    array << ['']
   end
   array
 end
@@ -63,7 +63,6 @@ end
 def collect_table(timetable)
   text = ''
   tweets = []
-  diagrum = ['平日便', '土曜日便', '夏期ダイヤ']
   timetable.each do |wday|
     
     time = []

@@ -25,6 +25,7 @@ end
 bus_schedule = 'http://www.osaka-sandai.ac.jp/cgi-bin/cms/campus_life.cgi?studentlife_cd=5JzeUsFN0i'
 doc = Nokogiri::HTML(open(bus_schedule))
 SATURDAY = 6
+SUNDAY = 0
 
 def split_table(column)
   timetable = "table[@class='timetable_suminodo']"
@@ -105,7 +106,7 @@ while true
       tweets = "現在直近のシャトルバス運行時間 \n"
       tweets << collect_table(suminodo_table)
       tweets << collect_table(daisan_table)
-      client.update(tweets)
+      client.update(tweets) unless Time.now.wday == SUNDAY
     end
 
     sleep 60

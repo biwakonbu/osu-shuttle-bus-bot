@@ -27,6 +27,11 @@ doc = Nokogiri::HTML(open(bus_schedule))
 SATURDAY = 6
 SUNDAY = 0
 
+def stop_operation_message(tweet)
+  return '本日の運行は終了しました。' if tweet.empty?
+  tweet
+end
+
 def split_table(column)
   timetable = "table[@class='timetable_suminodo']"
   "//#{timetable}//td[#{column}]|//#{timetable}//th[#{column}]"
@@ -86,9 +91,9 @@ def collect_table(timetable)
   end
   
   if Time.now.wday < SATURDAY
-    tweets[0]
+    stop_operation_message(tweets[0])
   else
-    tweets[1]
+    stop_operation_message(tweets[1])
   end
 end
 
